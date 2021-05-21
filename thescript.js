@@ -14,10 +14,34 @@ async function createWidget() {
   // Spacer between heading and launch date
   listwidget.addSpacer(15);
   
+  // Fetch next launch date
+  let launch = await getNextLaunch();
+  let launchDateTime = getLaunchDateTime(launch);
   
   // Return the created widget
   return listwidget;
 }
+
+async function getNextLaunch() {
+  // Query url
+  const url = "https://api.spacexdata.com/v4/launches/next";
+
+  // Initialize new request
+  const request = new Request(url);
+
+  // Execute the request and parse the response as json
+  const response = await request.loadJSON();
+
+  // Return the returned launch data
+  return response;
+}
+
+function getLaunchDateTime(launchData) {
+  // Parse launch date to new date object
+  const launchDateTime = new Date(launchData.date_utc);
+  return launchDateTime;
+}
+
 
 let widget = await createWidget();
 
