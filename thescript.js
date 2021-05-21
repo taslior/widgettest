@@ -18,9 +18,44 @@ async function createWidget() {
   let launch = await getNextLaunch();
   let launchDateTime = getLaunchDateTime(launch);
   
+  // Add the launch time to the widget
+  displayLaunchDateTime(listwidget, launchDateTime, launch.date_precision);
+
   // Return the created widget
   return listwidget;
 }
+
+function addDateText(stack, text) {
+  let dateText = stack.addText(text);
+  dateText.centerAlignText();
+  dateText.font = Font.semiboldSystemFont(20);
+  dateText.textColor = new Color("#ffffff");
+}
+
+function displayLaunchDateTime(stack, launchDateTime, precision) {
+  // Check if next launch date is precise enough and display different details based on the precision
+  if (precision == "hour") {
+
+    // Add launch date
+    const dateOptions = { year: "numeric", month: "2-digit", day: "2-digit" };
+    let datestring = launchDateTime.toLocaleDateString(undefined, dateOptions);
+    addDateText(stack, datestring);
+
+    // Add launch time
+    const timeOptions = { hour: "numeric", minute: "numeric" };
+    let timestring = launchDateTime.toLocaleTimeString(undefined, timeOptions);
+    addDateText(stack, timestring);
+  } else if (precision == "day") {
+
+    // Add launch date
+    const dateOptions = { year: "numeric", month: "2-digit", day: "2-digit" };
+    let datestring = launchDateTime.toLocaleDateString(undefined, dateOptions);
+    addDateText(stack, datestring);
+  } else {
+    addDateText(stack, "No day for next launch given");
+  }
+}
+
 
 async function getNextLaunch() {
   // Query url
